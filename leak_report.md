@@ -1,6 +1,11 @@
 # Leak report
 
 _Use this document to describe whatever memory leaks you find in `clean_whitespace.c` and how you might fix them. You should also probably remove this explanatory text._
+
+
+
+
+
 The following message is returned when running valgrind --leak-check=full ./check_whitespace
 ==21325== 
 ==21325== HEAP SUMMARY:
@@ -22,4 +27,10 @@ The following message is returned when running valgrind --leak-check=full ./chec
 ==21325== 
 ==21325== For counts of detected and suppressed errors, rerun with: -v
 ==21325== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+
+
+
+
+
+
 It seems like the memory leak is occuring. 46 bytes are lost. The leak is occuring in strip since is_cleaned uses strip. In the actual code strip contains the line: result = calloc(size-num_spaces+1, sizeof(char));. Result is never being cleared, so the memory is never made available for future use. The function is_cleaned contains a pointer for the result of stripped, so freeing up the pointer in is_cleaned should fix the leakage.
